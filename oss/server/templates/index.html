@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Football Match Rating Prediction</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0;
+            text-align: center;
+        }
+
+        .buttons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .buttons button {
+            margin: 5px;
+        }
+
+        .results-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .result {
+            margin: 10px;
+            border: 1px solid #ddd;
+            padding: 10px;
+            width: 300px; /* 필요에 따라 조정 */
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Choose a tottenham's Match Date</h1>
+    <div class="buttons">
+        <button onclick="fetchPrediction('2023-08-13')">8월 13일</button>
+        <button onclick="fetchPrediction('2023-08-20')">8월 20일</button>
+        <button onclick="fetchPrediction('2023-08-26')">8월 26일</button>
+        <button onclick="fetchPrediction('2023-09-02')">9월 2일</button>
+        <button onclick="fetchPrediction('2023-09-16')">9월 16일</button>
+        <button onclick="fetchPrediction('2023-09-24')">9월 24일</button>
+        <button onclick="fetchPrediction('2023-10-01')">10월 1일</button>
+        <button onclick="fetchPrediction('2023-10-07')">10월 7일</button>
+        <button onclick="fetchPrediction('2023-10-24')">10월 24일</button>
+        <button onclick="fetchPrediction('2023-10-28')">10월 28일</button>
+        <button onclick="fetchPrediction('2023-11-07')">11월 7일</button>
+        <button onclick="fetchPrediction('2023-11-11')">11월 11일</button>
+        <button onclick="fetchPrediction('2023-11-26')">11월 26일</button>
+    </div>
+
+
+     <div class="results-container">
+         <!-- 예측 결과를 표시할 영역 -->
+        <div id="predictionResult" class="result"></div>
+          <!-- 모델별 RMSE 정보를 표시할 영역 -->
+        <div id="modelRmse" class="result"></div>
+    </div>
+
+    <script>
+       function fetchPrediction(date) {
+        fetch('/predict', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ date: date })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                document.getElementById('predictionResult').innerHTML = data.error;
+            } else {
+                displayPredictionByPosition(data.predictions); // 각 포지션별 예측 결과를 표시
+                displayModelRmse(data.model_rmses); // 모든 모델의 RMSE를 표시
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching prediction:', error);
+            document.getElementById('predictionResult').innerHTML = 'Error fetching prediction.';
+        });
+    }
+
+    function displayPredictionByPosition(predictions) {
+        let resultHtml = '<h3>Predictions:</h3>';
+        if (predictions) {
+            for (const [position, players] of Object.entries(predictions)) {
+                resultHtml += `<h4>${position}</h4>`;
+                players.forEach(player => {
+                    resultHtml += `<p>${player.name} - Actual: ${player.actual.toFixed(2)}, Predicted: ${player.predicted.toFixed(2)}</p>`;
+                });
+            }
+        } else {
+            resultHtml += '<p>No predictions available.</p>';
+        }
+        document.getElementById('predictionResult').innerHTML = resultHtml;
+    }
+
+    function displayModelRmse(modelRmses) {
+        let rmseHtml = '<h3>Model RMSEs:</h3>';
+        if (modelRmses) {
+            for (const [model, rmse] of Object.entries(modelRmses)) {
+                rmseHtml += `<p>${model}: ${rmse.toFixed(3)}</p>`;
+            }
+        } else {
+            rmseHtml += '<p>No RMSE data available.</p>';
+        }
+        document.getElementById('modelRmse').innerHTML = rmseHtml;
+    }
+
+
+
+    </script>
+
+</body>
+</html>
