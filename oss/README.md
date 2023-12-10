@@ -7,11 +7,6 @@
 <br/>
 
 
-<hr/>
-<br/>
-<br/>
-<br/>
-
 
 
 ## 배경
@@ -119,6 +114,7 @@ SGD L2 규제: 0.5310 | -------| rbf 커널 0.5914 | -------| -------| -------
 * 테스트데이터
 
 <br/>
+
 선형회귀 | 결정트리 | svm | 랜덤포레스트 | 그래디언트 부스트 | 앙상블
 --------| --------| -------| -------| -------| -------
 정규방정식: 0.4984 | 0.6495 | 리니어 0.5438 | 0.5796 | 직접 0.5856 |  0.5409
@@ -181,7 +177,7 @@ TensorFlow, 3rd Edition, O'REILLY
 <br/><br/>
 ## 라이센스
 
-[LICENSE](https://github.com/junheehong98/junheehong98/tree/main/oss/LICENSE)
+[LICENSE](https://github.com/junheehong98/junheehong98/tree/main/oss/LICENSE.md)
 
 
 
